@@ -10,7 +10,7 @@ _start:
     call print          ; print string
     call Exit           ; Exit the program
 
-print:
+print:                  ; fix this
     mov rdi, outFormat  ; set 1st argument (Print Format)
     mov rsi, message    ; set 2nd argument (message)
     call printf         ; printf(outFormat, message)
