@@ -13,6 +13,7 @@ _start:
 print:                  ; fix this
     mov rdi, outFormat  ; set 1st argument (Print Format)
     mov rsi, message    ; set 2nd argument (message)
+    sub rsp, 8          ; Restamos 8 al puntero de pila
     call printf         ; printf(outFormat, message)
     ret
 
