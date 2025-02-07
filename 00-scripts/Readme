@@ -1,0 +1,3 @@
+Loader: ejecuta codigo maquina
+Shellcoder: Genera codigo maquina a partir de un binario ejecutable
+Assembler: Genera un .o y un binario ejecutable a partir de codigo ensamblador .s
