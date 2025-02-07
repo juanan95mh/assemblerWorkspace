@@ -3,7 +3,6 @@ _start:
     ; push './flg.txt\x00'
     xor sil,sil
     push si
-    mov dil, 't'
     push di               ; push NULL string terminator
     mov rdi, '/flg.tx' 
     push rdi
