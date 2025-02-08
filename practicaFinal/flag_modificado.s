@@ -3,20 +3,21 @@ global _start
 section .text
 _start:
     ; push './flg.txt\x00'
-    push 0              ; push NULL string terminator
+    xor sil, sil        ; Ponemos a 0 sil que es la parte baja de si ( los 8 bytes menos significativos)
+    push si            ; push NULL string terminator ; Pusheamos si entero; La suma de estas dos instrucciones ocupa menos espacio que la instrucción push 0
     mov rdi, '/flg.txt' ; rest of file name
     push rdi            ; push to stack 
     
     ; open('rsp', 'O_RDONLY')
     mov rax, 2          ; open syscall number
     mov rdi, rsp        ; move pointer to filename
-    mov rsi, 0          ; set O_RDONLY flag
+    xor rdi, rdi        ; set O_RDONLY flag ; xor con el mismo es lo mismo que =0 pero ocupa menos espacio
     syscall
 
     ; read file
     lea rsi, [rdi]      ; pointer to opened file
     mov rdi, rax        ; set fd to rax from open syscall
-    mov rax, 0          ; read syscall number
+    xor rax, rax        ; read syscall number ; xor con el mismo es lo mismo que =0 pero ocupa menos espacio
     mov rdx, 24         ; size to read
     syscall
 
@@ -26,8 +27,5 @@ _start:
     mov rdx, 24         ; size to read
     syscall
 
-    ; exit
-    mov rax, 60
-    mov rdi, 0
-    syscall
+    ; exit //Retiramos exit para ahorrar espacio
 
