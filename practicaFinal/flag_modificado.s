@@ -17,15 +17,14 @@ _start:
     ; read file
     lea rsi, [rdi]      ; pointer to opened file
     mov rdi, rax        ; set fd to rax from open syscall
-    xor rax, rax        ; read syscall number ; xor con el mismo es lo mismo que =0 pero ocupa menos espacio
-    mov rdx, 24         ; size to read
+    xor al, al          ; read syscall number
+    mov dl, 24         ; size to read
     syscall
 
     ; write output
-    mov rax, 1          ; write syscall
-    mov rdi, 1          ; set fd to stdout
-    mov rdx, 24         ; size to read
+    mov al, 1          ; write syscall
+    mov dil, 1          ; set fd to stdout
+    mov dl, 24         ; size to read
     syscall
 
     ; exit //Retiramos exit para ahorrar espacio
-
