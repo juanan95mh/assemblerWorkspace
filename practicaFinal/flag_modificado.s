@@ -9,9 +9,9 @@ _start:
     push rdi            ; push to stack 
     
     ; open('rsp', 'O_RDONLY')
-    mov rax, 2          ; open syscall number
+    mov al, 2          ; open syscall number ; Ponemos a 2 en al que es la parte baja de rax (los 8 bytes menos significativos)
     mov rdi, rsp        ; move pointer to filename
-    xor rdi, rdi        ; set O_RDONLY flag ; xor con el mismo es lo mismo que =0 pero ocupa menos espacio
+    xor rsi, rsi        ; set O_RDONLY flag ; Errata anterior commit, era rsi xor con el mismo es lo mismo que =0 pero ocupa menos espacio
     syscall
 
     ; read file
